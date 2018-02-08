@@ -1,6 +1,10 @@
 const bodyParser = require('body-parser')
+const cors = require('cors')
 const express = require('express')
 const app = express()
+
+// allow cors
+app.use(cors())
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -40,7 +44,6 @@ let state = {
 	phase: 			null, //PHASES[n]
 	question: 		null, //QUESTIONS[n]
 	time_next_phase: 0,
-	winner: 		null,
 	submissions: 	[
 		//new Submission("8sn28d", "chrissilich")
 	],
@@ -97,10 +100,6 @@ app.get('/status', (req, res) => {
 	res.status(200).json(state)
 })
 
-app.get('/submission', (req, res) => {
-	res.json(state.submissions)
-})
-
 app.post('/submission', (req, res) => {
 	if (state.phase != PHASES[0]) {
 		return res.status(409).send("You can't submit right now.");
@@ -109,7 +108,7 @@ app.post('/submission', (req, res) => {
 	res.status(201).send("Submission recieved")
 })
 
-app.post('/submission/:id', (req, res) => {
+app.post('/upvote/:id', (req, res) => {
 	if (state.phase != PHASES[0]) {
 		return res.status(409).send("You can't vote right now.");
 	}
