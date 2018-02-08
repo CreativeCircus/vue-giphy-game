@@ -13,8 +13,8 @@ Do a GET request for `/status` to get the current state of the game, in JSON obj
 2. `question` *String.* The question this round is based on.
 3. `time_next_phase` *Number.* The unix timestamp of when this round is scheduled to end. Use this on the front end to show a countdown til the end of the round.
 4. `submissions` *Array of Submission Objects.* This contains all the submissions already in the system. Each submission object will contain:
-  * `giphyID` *String.* The giphy ID of the chosen gif
-  * `username` *String.* The name of the submitting user
+   - `giphyID` *String.* The giphy ID of the chosen gif
+   - `username` *String.* The name of the submitting user
 
 ### `POST /submission`
 Do a POST request for `/submission` to enter a new submission in the game. With the request you must send two pieces of data:
