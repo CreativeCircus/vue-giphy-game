@@ -13,29 +13,31 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 const PHASES = [
-	"submission",
-	"winner"
+	"game", // question showing, players submitting and voting
+	"post-game" // winner showing
 ]
 
 const QUESTIONS = [
-	"question1",
-	"question2",
-	"question3",
-	"question4",
-	"question5",
+	"winning",
+	"friday",
+	"hangry",
+	"wtf",
+	"nailed it!",
+	"smh"
 ];
 
 const CONFIG = {
-	PORT: 						3000,
-	SUBMISSION_PHASE_LENGTH: 	60 * 1000,
-	WINNER_PHASE_LENGTH: 		60 * 1000
+	PORT: 						63734,
+	SUBMISSION_PHASE_LENGTH: 	120 * 1000,
+	WINNER_PHASE_LENGTH: 		10 * 1000
 }
 
 class Submission {
-	constructor(giphyID, username) {
-		this.giphyID = giphyID;
+	constructor(giphyURL, username) {
+		this.giphyURL = giphyURL;
 		this.username = username;
-		this.upvotes = 0;
+		this.upvotes = [];
+		console.log("created submission", giphyURL, username)
 	}
 }
 
@@ -43,7 +45,10 @@ class Submission {
 let state = {
 	phase: 			null, //PHASES[n]
 	question: 		null, //QUESTIONS[n]
-	time_next_phase: 0,
+	phaseStartTime: null,
+	phaseLength:	null,
+	// when state is sent to front end, we add timeLeftInPhase, which is how long in ms there is left in this phase
+	// when state is sent to front end, we add currentTime of Date.now()
 	submissions: 	[
 		//new Submission("8sn28d", "chrissilich")
 	],
@@ -52,9 +57,10 @@ let state = {
 
 let goToSubmissionPhase = function() {
 	setTimeout(goToWinnerPhase, CONFIG.SUBMISSION_PHASE_LENGTH)
-	state.time_next_phase = Date.now() + CONFIG.SUBMISSION_PHASE_LENGTH;
+	state.phaseStartTime = Date.now();
+	state.phaseLength = CONFIG.SUBMISSION_PHASE_LENGTH;
 	// console.log("current time: ", Date.now());
-	// console.log("time_next_phase: ", state.time_next_phase);
+	// console.log("timeToNextPhase: ", state.timeToNextPhase);
 
 	// change phase
 	state.phase = PHASES[0]
@@ -72,13 +78,14 @@ let goToSubmissionPhase = function() {
 
 let goToWinnerPhase = function() {
 	setTimeout(goToSubmissionPhase, CONFIG.WINNER_PHASE_LENGTH)
-	state.time_next_phase = Date.now() + CONFIG.SUBMISSION_PHASE_LENGTH;
+	state.phaseStartTime = Date.now();
+	state.phaseLength = CONFIG.WINNER_PHASE_LENGTH;
 
 	// sort the submissions
 	state.submissions.sort(function(a,b) {
-		if (a.upvotes < b.upvotes) return -1;
-		if (a.upvotes == b.upvotes) return 0;
-		if (a.upvotes > b.upvotes) return 1;
+		if (a.upvotes.length < b.upvotes.length) return -1;
+		if (a.upvotes.length == b.upvotes.length) return 0;
+		if (a.upvotes.length > b.upvotes.length) return 1;
 	})
 
 	// change phase
@@ -97,14 +104,17 @@ app.get('/', (req, res) => res.status(200).send('This is the API for the game we
 
 
 app.get('/status', (req, res) => {
-	res.status(200).json(state)
+	res.status(200).json( Object.assign({
+		currentTime: Date.now(), 
+		timeLeftInPhase: state.phaseStartTime + state.phaseLength - Date.now()
+	}, state) )
 })
 
 app.post('/submission', (req, res) => {
 	if (state.phase != PHASES[0]) {
 		return res.status(409).send("You can't submit right now.");
 	}
-	state.submissions.push( new Submission(req.body.giphyID, req.body.username) )
+	state.submissions.push( new Submission(req.body.giphyURL, req.body.username) )
 	res.status(201).send("Submission recieved")
 })
 
@@ -115,8 +125,14 @@ app.post('/upvote/:id', (req, res) => {
 	if (state.submissions.length <= req.params.id) {
 		return res.status(404).send("That submission doesn't exist.");		
 	}
-	state.submissions[ req.params.id ].upvotes++;
-	res.status(202).send("Upvoted submission " + req.params.id );
+	var submission = state.submissions[ req.params.id ]
+	if (submission.upvotes.indexOf( req.body.username ) === -1) {
+		// havent yet upvoted this one	
+		submission.upvotes.push( req.body.username )
+		res.status(202).send("Upvoted submission " + req.params.id );
+	} else {
+		res.status(409).send("Upvoted already counted " + req.params.id );
+	}
 })
 
 app.listen(CONFIG.PORT, () => {

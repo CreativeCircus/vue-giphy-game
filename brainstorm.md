@@ -1,3 +1,13 @@
+questions
+	winning
+	friday
+	hangry
+	wtf
+	nailed it!
+	smh
+	
+
+
 back end logic
 	timer to change phases
 	during submitting phase, generate a question, and recieve submissions and upvotes
