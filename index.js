@@ -18,16 +18,19 @@ const PHASES = [
 ]
 
 const QUESTIONS = [
-	"winning",
-	"friday",
+	// "winning",
+	// "friday",
 	"hangry",
 	"wtf",
 	"nailed it!",
-	"smh"
+	"smh",
+	"fail",
+	"resting bitch/bastard face",
+	"tgif",
 ];
 
 const CONFIG = {
-	PORT: 						63734,
+	PORT: 						6432,
 	SUBMISSION_PHASE_LENGTH: 	120 * 1000,
 	WINNER_PHASE_LENGTH: 		10 * 1000
 }
