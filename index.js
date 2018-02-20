@@ -86,9 +86,9 @@ let goToWinnerPhase = function() {
 
 	// sort the submissions
 	state.submissions.sort(function(a,b) {
-		if (a.upvotes.length < b.upvotes.length) return -1;
+		if (a.upvotes.length < b.upvotes.length) return 1;
 		if (a.upvotes.length == b.upvotes.length) return 0;
-		if (a.upvotes.length > b.upvotes.length) return 1;
+		if (a.upvotes.length > b.upvotes.length) return -1;
 	})
 
 	// change phase
@@ -99,6 +99,7 @@ let goToWinnerPhase = function() {
 }
 
 goToSubmissionPhase();
+
 
 
 
@@ -116,6 +117,9 @@ app.get('/status', (req, res) => {
 app.post('/submission', (req, res) => {
 	if (state.phase != PHASES[0]) {
 		return res.status(409).send("You can't submit right now.");
+	}
+	if (!req.body || !req.body.giphyURL || !req.body.username) {
+		return res.status(400).send("Your submission was malformed. Make sure it contains a giphyURL and a username.");
 	}
 	state.submissions.push( new Submission(req.body.giphyURL, req.body.username) )
 	res.status(201).send("Submission recieved")
