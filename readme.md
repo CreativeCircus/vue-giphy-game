@@ -13,12 +13,12 @@ Do a GET request for `/status` to get the current state of the game, in JSON obj
 2. `question` *String.* The question this round is based on.
 3. `timeLeftInPhase` *Number.* The number of milliseconds until the phase ends. Use this on the front end to show a countdown til the end of the round.
 4. `submissions` *Array of Submission Objects.* This contains all the submissions already in the system. Each submission object will contain:
-   - `giphyID` *String.* The giphy ID of the chosen gif
+   - `giphyURL` *String.* The giphy URL of the chosen gif
    - `username` *String.* The name of the submitting user
 
 ### `POST /submission`
 Do a POST request for `/submission` to enter a new submission in the game. With the request you must send two pieces of data:
-1. `giphyID` *String.* The string of letters and numbers that represents a gif on the Giphy service. You'll need to create you own ajax requests to the (Giphy API)[https://developers.giphy.com/docs/] to find and choose gifs.
+1. `giphyURL` *String.* The URL directly to the chosen GIF file on the Giphy server. You'll need to create you own ajax requests to the (Giphy API)[https://developers.giphy.com/docs/] to find and choose gifs.
 2. `username` *String.* A user name the user has entered to represent them on the scoreboard. No security here, just let the user type a name.
 
 ### `POST /upvote/{id}`
