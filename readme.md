@@ -21,6 +21,6 @@ Do a POST request for `/submission` to enter a new submission in the game. With 
 1. `giphyURL` *String.* The URL directly to the chosen GIF file on the Giphy server. You'll need to create you own ajax requests to the (Giphy API)[https://developers.giphy.com/docs/] to find and choose gifs.
 2. `username` *String.* A user name the user has entered to represent them on the scoreboard. No security here, just let the user type a name.
 
-### `POST /upvote/{id}`
-Do a POST request for `/upvote/{id}` where `{id}` is the actual index of the submission you want to upvote. With the request you must send one piece of data:
+### `POST /upvote/{index}`
+Do a POST request for `/upvote/{index}` where `{index}` is the actual index of the submission you want to upvote. With the request you must send one piece of data:
 1. `username` *String.* The username of the voting user. Yes, this is not very secure. 
