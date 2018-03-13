@@ -9,7 +9,7 @@ This server will be deployed somewhere, ask your teacher for the URL. Once you h
 
 ### `GET /status`
 Do a GET request for `/status` to get the current state of the game, in JSON object form. This should be done when the player first loads the game, so that their interface is in sync with the phase/timing of the game's rounds, and at any other time that the player's device needs to learn or confirm what the game's state is. Inside this JSON object, you'll find
-1. `phase` *String.* Describes the phase of the two phase game. Either "submission" or "winner". The sumbission phase is when the game is taking submissions, and allowing people to vote on the submission they like best. The winner phase is when the game is not taking submissions or votes, but is simply showing who won this round with the most upvoted submission.
+1. `phase` *String.* Describes the phase of the two phase game. Either "game" or "post-game". The game phase is when the game is taking submissions, and allowing people to vote on the submission they like best. The post-game phase is when the game is not taking submissions or votes, but is simply showing who won this round with the most upvoted submission.
 2. `question` *String.* The question this round is based on.
 3. `timeLeftInPhase` *Number.* The number of milliseconds until the phase ends. Use this on the front end to show a countdown til the end of the round.
 4. `submissions` *Array of Submission Objects.* This contains all the submissions already in the system. Each submission object will contain:

@@ -40,6 +40,7 @@ class Submission {
 		this.giphyURL = giphyURL;
 		this.username = username;
 		this.upvotes = [];
+		this.timestamp = Date.now()
 		console.log("created submission", giphyURL, username)
 	}
 }
